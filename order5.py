@@ -19,16 +19,27 @@ def get_text_excluding_children(driver, element):
     """, element)
 ######launch firefox
 driver = webdriver.Firefox()
+######open config file
+with open("config.txt","rb") as configfile:
+    text = configfile.readlines()
+
+    email=text[0].strip()
+    pw=text[1].strip()
+    rowcount=int(text[2])
+    startline=int(text[3])
+
+    print email
+    print startline
 ######open autoorder file
 with open("autoorder.csv","rb") as csvfile:
 #with open('autoorder.csv', 'rb') as csvfile:
   order = csv.reader(csvfile, delimiter=',', quotechar='|')
-  rowcount=130
+
   #for row in order:
     #rowcount=rowcount+1
   print "rowcount:",rowcount
   lines = csvfile.readlines()
-  for line in range (90,rowcount+1):
+  for line in range (startline,rowcount+1):
     print "line:",line
     #csvfile.seek(line)
     row = lines[line].split(',')
@@ -99,8 +110,8 @@ with open("autoorder.csv","rb") as csvfile:
 
     try:
         driver.find_element_by_id("ap_email").clear()
-        driver.find_element_by_id("ap_email").send_keys("")
-        driver.find_element_by_id("ap_password").send_keys("")
+        driver.find_element_by_id("ap_email").send_keys(email)
+        driver.find_element_by_id("ap_password").send_keys(pw)
         driver.find_element_by_id("signInSubmit-input").click()
     except NoSuchElementException,e:
         print "already login"
@@ -111,8 +122,8 @@ with open("autoorder.csv","rb") as csvfile:
     try:
         driver.find_element_by_id("message_error")
         driver.find_element_by_id("ap_email").clear()
-        driver.find_element_by_id("ap_email").send_keys("")
-        driver.find_element_by_id("ap_password").send_keys("")
+        driver.find_element_by_id("ap_email").send_keys(email)
+        driver.find_element_by_id("ap_password").send_keys(pw)
         driver.find_element_by_id("signInSubmit-input").click()
     except NoSuchElementException,e:
         print "already login"
